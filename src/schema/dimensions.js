@@ -1,6 +1,6 @@
-import Mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
-const { Schema } = Mongoose;
+const { Schema } = mongoose;
 
 const Dimensions = new Schema({
   character: String,

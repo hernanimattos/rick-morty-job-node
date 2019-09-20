@@ -20,9 +20,7 @@ const saveAllChars = async () => {
   const chars = ['rick', 'morty'];
 
   const saveCharsPromise = chars.map((char) => {
-    const save = saveCharacter(char);
-    console.log(save);
-    return save;
+    return saveCharacter(char);
   });
 
   const response = await Promise.all(saveCharsPromise);
@@ -31,10 +29,13 @@ const saveAllChars = async () => {
 };
 
 const apiAllData = (req, res) => {
+
   const dimensions = mongoose.model('dimensions', dimensionsSchema);
   dimensions.find({}, (err, dim) => {
     res.send(dim);
   });
+  
+  return true
 };
 
 export {
