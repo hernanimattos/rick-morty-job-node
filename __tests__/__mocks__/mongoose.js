@@ -1,5 +1,11 @@
-const mongoose = {
-    model: jest.fn(()=>({find:jest.fn()})),
+import mongoose from 'mongoose';
 
-}
-const Schema = jest.fn(()=>({}))
+jest.mock('mongoose', () => ({
+    Schema: jest.fn(),
+    model: jest.fn(() => ({
+      find:jest.fn(),
+      findOneAndUpdate: jest.fn(),
+    })),
+  }));
+
+  export default mongoose;

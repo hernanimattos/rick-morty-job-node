@@ -1,12 +1,23 @@
 import cron from 'node-cron';
-import { saveAllChars } from '../controllers/search';
+import searchController from '../controllers/search';
 
-const task = cron.schedule('* * */8 * *', () => {
-  saveAllChars();
-  console.log('Cron rodoue fez a rotina');
-},
-{
-  scheduled: true,
-});
+const cb = () => {
+  searchController.saveAllChars();
+  console.log('Cron rodou e fez a rotina');
+};
 
-task.start();
+const jobCharacter = () => {
+  const task = cron.schedule('* * */8 * *', cb(),
+    {
+      scheduled: true,
+    });
+
+  task.start();
+};
+
+jobCharacter();
+
+export {
+  jobCharacter,
+  cb,
+};

@@ -1,6 +1,6 @@
 import './db';
 import './cron';
-import { apiAllData } from './controllers/search';
+import searchController from './controllers/search';
 
 const createError = require('http-errors');
 const express = require('express');
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/api', apiAllData);
+app.get('/api', searchController.apiAllData);
 
 app.use((req, res, next) => {
   next(createError(404));
@@ -29,10 +29,13 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   res.status(err.status || 500);
-  res.render('error');
+  res.json({
+    message: err.message,
+    error: err,
+  });
   next();
 });
 
 app.listen(port, () => {
-  console.log(`Server rodando em http:localhost:${port}`);
+  console.log(`Server rodando em http://localhost:${port}`);
 });

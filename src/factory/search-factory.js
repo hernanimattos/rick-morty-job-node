@@ -1,7 +1,7 @@
 import Http from '../http';
 
 class GetCharDimension {
-  async getCharByName(name) { // eslint-disable-line class-methods-use-this
+  async getCharByName(name) {
     const response = await Http.get(`character/?name=${name}`);
     const {
       data: {
@@ -13,7 +13,7 @@ class GetCharDimension {
   }
 
 
-  getLocationChar(data) { // eslint-disable-line class-methods-use-this
+  getLocationChar(data) {
     const names = data.map((itemLocation) => {
       const {
         location: {
@@ -24,11 +24,11 @@ class GetCharDimension {
       return name;
     });
 
-    return GetCharDimension.filterDimensionsCount(names);
+    return this.filterDimensionsCount(names);
   }
 
 
-  static filterDimensionsCount(names = []) {
+  filterDimensionsCount(names = []) {
     const filterDuplicateValues = new Set(names);
     return [...filterDuplicateValues].length;
   }

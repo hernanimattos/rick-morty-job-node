@@ -1,44 +1,34 @@
 
-import mongoose from 'mongoose';
-import dimensionsSchema from '../schema/dimensions';
-import getChar from '../factory/search';
+import dimensionsModel from '../models/dimensions';
+import getCharDimension from '../factory/search-factory';
 
-const saveCharacter = async (charName) => {
-  const dimensions = mongoose.model('dimensions', dimensionsSchema);
-  const charCount = await getChar.getCharByName(charName);
+class SearchController {
+  async saveCharacter(charName) {
+    const charCount = await getCharDimension.getCharByName(charName);
 
-  const filter = { character: charName };
-  const update = { dimensions_count: charCount };
+    const filter = { character: charName };
+    const update = { dimensions_count: charCount };
 
-  return dimensions.findOneAndUpdate(filter, update, {
-    new: true,
-    upsert: true,
-  });
-};
+    return dimensionsModel.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true,
+    });
+  }
 
-const saveAllChars = async () => {
-  const chars = ['rick', 'morty'];
+  apiAllData(req, res, next) {
+    return dimensionsModel.find({}, (err, dim) => {
+      if (err) next(err);
+      return res.send(dim);
+    });
+  }
 
-  const saveCharsPromise = chars.map((char) => {
-    return saveCharacter(char);
-  });
+  async saveAllChars() {
+    const chars = ['rick', 'morty'];
+    const saveCharsPromise = chars.map((char) => this.saveCharacter(char));
+    const response = await Promise.all(saveCharsPromise);
 
-  const response = await Promise.all(saveCharsPromise);
+    if (response) console.log('Busca feita e salva');
+  }
+}
 
-  if (response) console.log('Busca feita e salva');
-};
-
-const apiAllData = (req, res) => {
-
-  const dimensions = mongoose.model('dimensions', dimensionsSchema);
-  dimensions.find({}, (err, dim) => {
-    res.send(dim);
-  });
-  
-  return true
-};
-
-export {
-  apiAllData,
-  saveAllChars,
-};
+export default new SearchController();
